@@ -59,6 +59,8 @@ class Patient : public User {
 private:
 	vector<Reservation>reservations;
 public:
+	Patient(User user) : User(user) {}
+
 	void reserve(Reservation reservation) {
 		reservations.push_back(reservation);
 	}
@@ -67,6 +69,65 @@ public:
 class Admin : public User {
 private:
 
+};
+
+class DataBase {
+public:
+	void mainInterface() {
+		int type;
+			cout << "Welcome to HMS\n\n"
+				<< "1. Login\n"
+				<< "2. Sign Up\n";
+			
+			cin >> type;
+			
+			while (type <= 0 or type > 2) {
+				cout << "Error: please enter a valid option\n";
+				cout << "Welcome to HMS\n"
+					<< "1. Login\n"
+					<< "2. Sign Up\n";
+				cin >> type;
+			}
+
+			if (type == 1)
+				login();
+			else
+				signUp();
+	}
+	void login() {
+
+	}
+
+	void signUp() {
+		int userType;
+		User user;
+		string tempUsername;
+		string tempPassword;
+		string tempConfirmPassword;
+		string tempUserID;
+	
+		cout << "Username: ";
+		cin >> tempUsername;
+
+		cout << "Password: ";
+		cin >> tempPassword;
+		cout << "Confirm Password: ";
+		cin >> tempConfirmPassword;
+
+		cout << "User ID: ";
+		cin >> tempUserID;
+
+		cout << "User type (1. Patient/ 2. Admin): ";
+		cin >> userType;
+
+		if (tempPassword != tempConfirmPassword) {
+			cout << "Passwords don't match\n";
+			signUp();
+		}
+		user.setUsername(tempUsername);
+		user.setPassword(tempPassword);
+		user.setUserID(tempUserID);
+	}
 };
 
 int main() {
