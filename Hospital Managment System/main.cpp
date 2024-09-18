@@ -20,40 +20,44 @@ private:
 
 class User {
 private:
-	string userID;
+	int userID;
 	string username;
 	string password;
+
 public:
-	User() : 
-		userID("User ID"), username("Username"), password("Password") {}
+	static int IDGenerator;
+	User() {
 
-	User(string userID, string username, string password) :
-		userID(userID), username(username), password(password){}
+	}
 
-	void setUsername(string username) {
+	User(string username, string password) :
+		username(username), password(password) {
+		userID = IDGenerator++;
+	}
+
+	bool setUsername(const string& username) {
+		if (username.empty())
+			return 0;
 		this->username = username;
+		return 1;
 	}
 
-	void setUserID(string userID) {
-		this->userID = userID;
-	}
-
-	void setPassword(string password) {
+	bool setPassword(const string& password) {
+		if (password.size() < 8)
+			return 0;
 		this->password = password;
+		return 1;
 	}
 
-	string getUsername() {
+	string getUsername() const {
 		return username;
-	}
-
-	string getUserID() const {
-		return userID;
 	}
 
 	string getPassword() const {
 		return password;
 	}
 };
+int User::IDGenerator = 0;
 
 class Patient : public User {
 private:
@@ -99,34 +103,60 @@ public:
 	}
 
 	void signUp() {
+		cout << "***********************\n\n\tSign Up\n\n***********************\n\n";
 		int userType;
 		User user;
 		string tempUsername;
 		string tempPassword;
 		string tempConfirmPassword;
-		string tempUserID;
 	
-		cout << "Username: ";
-		cin >> tempUsername;
-
-		cout << "Password: ";
-		cin >> tempPassword;
-		cout << "Confirm Password: ";
-		cin >> tempConfirmPassword;
-
-		cout << "User ID: ";
-		cin >> tempUserID;
-
-		cout << "User type (1. Patient/ 2. Admin): ";
-		cin >> userType;
-
-		if (tempPassword != tempConfirmPassword) {
-			cout << "Passwords don't match\n";
-			signUp();
+		while (true) {
+			cout << "Username: ";
+			cin >> tempUsername;
+			
+			//If the enterd username is empty it returns 0
+			if (!user.setUsername(tempUsername)) {
+				cout << "Please enter another user name\n";
+				continue;
+			}
+			break;
 		}
-		user.setUsername(tempUsername);
-		user.setPassword(tempPassword);
-		user.setUserID(tempUserID);
+
+		while (true) {
+			cout << "Password: ";
+			cin >> tempPassword;
+			cout << "Confirm Password: ";
+			cin >> tempConfirmPassword;
+			
+			//Checking if the entered passwords are equal
+			if (tempPassword != tempConfirmPassword) {
+				cout << "Passwords don't match\n";
+				continue;
+			}
+			//If the password is weak the condition returns 0
+			if (!user.setPassword(tempPassword)) {
+				cout << "The password you've enterd is weak\n";
+				continue;
+			}
+			break;
+		}
+
+		while (true) {
+			cout << "User type (1. Patient/ 2. Admin): ";
+			cin >> userType;
+			
+			if (userType != 1 and userType != 2) {
+				cout << "Please enter a valid user type\n";
+				continue;
+			}
+			break;
+		}
+		//The user is a patient
+		if (userType == 1)
+			Patient p1(user);
+		
+		//The user is an admin
+		else;
 	}
 };
 
