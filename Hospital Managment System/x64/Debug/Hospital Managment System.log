@@ -1,2 +1,3 @@
 ﻿  main.cpp
+E:\Projects\Hospital Managment System\Hospital Managment System\main.cpp(112,11): warning C4129: 'L': unrecognized character escape sequence
   Hospital Managment System.vcxproj -> E:\Projects\Hospital Managment System\x64\Debug\Hospital Managment System.exe

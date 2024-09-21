@@ -50,7 +50,9 @@ public:
 		return password;
 	}
 
-	virtual bool userType() {
+	virtual bool userType() const{ // A function to tell if the
+							 // The user is a patient '1'
+							// or an admin '0'
 		return false;
 	}
 };
@@ -65,7 +67,7 @@ public:
 		reservations.push_back(reservation);
 	}
 
-	bool userType() override {
+	bool userType() const override {
 		return true;
 	}
 };
@@ -75,43 +77,44 @@ private:
 public:
 	Admin(User user) : User(user) {}
 
-	bool userType() override {
+	bool userType() const override {
 		return false;
 	}
 };
 
 class DataBase {
 private:
-	void loadToFile(const string& fileName, User* user){
-		ofstream file(fileName);
+	void loadToFile(const string& fileName, User* user) const{
+		//To count number of rows
+		//To make an ID for each user
+		ifstream in(fileName);
+		int row = 0;
+		string temp;
+		while (getline(in, temp))
+			++row;
+		temp.clear();
+
+
+		// Id format : User type(A admin, P patient) + Row number
+		ofstream file(fileName, ios::app);
+		temp.push_back(user->userType() ? 'P' : 'A');
+		temp.push_back(row + '0');
+
+		file << temp << ',';
 		file << user->getUsername() << ',';
 		file << user->getPassword() << ',';
 		file << user->userType() << ',';
 		file << '\n';
 		file.close();
 	}
-public:
-	void mainInterface() {
-		int type;
-			cout << "Welcome to HMS\n\n"
-				<< "1. Login\n"
-				<< "2. Sign Up\n";
-			
-			cin >> type;
-			
-			while (type != 1 and type != 2) {
-				cout << "Error: please enter a valid option\n";
-				cout << "Welcome to HMS\n"
-					<< "1. Login\n"
-					<< "2. Sign Up\n";
-				cin >> type;
-			}
 
-			if (type == 1)
-				login();
-			else
-				signUp();
+	bool userExists(const string& fileName,const string& username) const {
+		ifstream file(fileName);
+
+
+		return false;
 	}
+
 	void login() {
 		cout << "***********************\n\n\Login\n\n***********************\n\n";
 		string username;
@@ -124,7 +127,6 @@ public:
 
 	void signUp() {
 		cout << "***********************\n\n\tSign Up\n\n***********************\n\n";
-		int userType;
 		User user;
 		string tempUsername;
 		string tempPassword;
@@ -166,9 +168,13 @@ public:
 		User* user1;
 
 		ifstream file("Data.txt");
+		int row = 0;
+		string temp;
+		while (getline(file, temp))
+			++row;
 
 		//The user is an admin "Because it is the first user"
-		if (file.peek() == std::ifstream::traits_type::eof())
+		if (row == 0)
 			user1 = new Admin(user);
 
 		//The user is a patient
@@ -179,7 +185,31 @@ public:
 
 		delete user1;
 	}
+public:
+	void mainInterface() {
+		int type;
+			cout << "Welcome to HMS\n\n"
+				<< "1. Login\n"
+				<< "2. Sign Up\n";
+			cout << "Enter choice: ";
+			cin >> type;
+			
+			while (type != 1 and type != 2) {
+				cout << "Error: please enter a valid option\n";
+				cout << "Welcome to HMS\n"
+					<< "1. Login\n"
+					<< "2. Sign Up\n";
+				cin >> type;
+			}
+
+			if (type == 1)
+				login();
+			else
+				signUp();
+	}
 };
 
 int main() {
+	DataBase DB;
+	DB.mainInterface();
 }
