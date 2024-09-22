@@ -1,3 +1,6 @@
-﻿  main.cpp
-E:\Projects\Hospital Managment System\Hospital Managment System\main.cpp(182,11): warning C4129: 'L': unrecognized character escape sequence
+﻿  Patient.cpp
+  Patient.h
+  User.cpp
+  Generating Code...
+x64\Debug\Patient.obj : warning LNK4042: object specified more than once; extras ignored
   Hospital Managment System.vcxproj -> E:\Projects\Hospital Managment System\x64\Debug\Hospital Managment System.exe
